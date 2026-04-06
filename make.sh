@@ -397,12 +397,13 @@ if [[ "${DECRYPTION}" == "true" ]]; then
   done
 fi
 # 分辨率修复
-echo -e "${Red}- 修复分辨率异常 (440)"
+echo -e "${Red}- 修复分辨率异常"
 sudo find "$GITHUB_WORKSPACE"/images/ -type f -name 'build.prop' | while read -r file; do
   echo -e "${Yellow}- 处理文件: $file"
+  sed -i '/ro\.sf\.lcd_sec_density/d' "$file"
   if grep -q '^ro\.sf\.lcd_density=' "$file"; then
-    # 存在 → 替换
     sed -i 's/^ro\.sf\.lcd_density=.*/ro.sf.lcd_density=440/' "$file"
+  fi
 done
 # 精简无用配置
 echo -e "${Red}- 精简无用配置"
