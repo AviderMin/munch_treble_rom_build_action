@@ -75,8 +75,12 @@ End_Time() {
 echo -e "${Red}- 开始下载系统包"
 Start_Time
 echo -e "${Yellow}- 开始下载底包"
-aria2c -x16 -j$(nproc) -U "Mozilla/5.0" -d "$GITHUB_WORKSPACE" ${VENDOR_URL}
+aria2c -x16 -s16 -j$(nproc) -U "Mozilla/5.0" -d "$GITHUB_WORKSPACE" ${VENDOR_URL}
 End_Time 下载底包
+echo -e "${Yellow}- 开始下载移植包"
+Start_Time
+aria2c -x16 -s16 -j$(nproc) -U "Mozilla/5.0" -d "$GITHUB_WORKSPACE" ${URL}
+End_Time 下载移植包
 ### 系统包下载结束
 
 ### 解包
@@ -94,6 +98,11 @@ mkdir -p "$GITHUB_WORKSPACE"/Extra_dir
 echo -e "${Red}- 开始解底包 Payload"
 $payload_extract -s -o "$GITHUB_WORKSPACE"/Extra_dir/ -i "$GITHUB_WORKSPACE"/"${device}"/payload.bin -X mi_ext,system,product -e -T0
 sudo rm -rf "$GITHUB_WORKSPACE"/"${device}"/payload.bin
+echo -e "${Yellow}- 开始解压移植包"
+Start_Time
+$a7z x "$GITHUB_WORKSPACE"/${port_zip_name} -o"$GITHUB_WORKSPACE"/images payload.bin >/dev/null
+rm -rf "$GITHUB_WORKSPACE"/${port_zip_name}
+End_Time 解压移植包
 echo -e "${Red}- 开始分解底包 Images"
 for i in system_ext odm vendor; do
   echo -e "${Yellow}- 正在分解底包: $i.img"
@@ -105,7 +114,8 @@ sudo mkdir -p "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
 sudo cp -rf "$GITHUB_WORKSPACE"/Extra_dir/* "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
 cd "$GITHUB_WORKSPACE"/images
 echo -e "${Red}- 开始解移植包 Payload"
-$payload_extract -s -o "$GITHUB_WORKSPACE"/images/ -i "${URL}" -X mi_ext,product,system,system_ext,odm -T0
+$payload_extract -s -o "$GITHUB_WORKSPACE"/images/ -i "$GITHUB_WORKSPACE"/images/payload.bin -X mi_ext,product,system,system_ext,odm -T0
+sudo rm -rf "$GITHUB_WORKSPACE"/images/payload.bin
 echo -e "${Red}- 开始分解移植包 Images"
 for i in mi_ext product system system_ext odm; do
   echo -e "${Yellow}- 正在分解移植包: $i"
