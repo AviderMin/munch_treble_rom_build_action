@@ -103,35 +103,9 @@ for i in system_ext odm vendor; do
 done
 sudo mkdir -p "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
 sudo cp -rf "$GITHUB_WORKSPACE"/Extra_dir/* "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
-echo -e "${Yellow}- 开始下载移植包"
-Start_Time
-mkdir -p "$GITHUB_WORKSPACE/port"
-aria2c -x16 -s16 -j$(nproc) -U "Mozilla/5.0" \
-  -d "$GITHUB_WORKSPACE/port" \
-  -o port.zip \
-  "${URL}"
-End_Time 下载移植包
-echo -e "${Yellow}- 解压移植包"
-Start_Time
-$a7z x "$GITHUB_WORKSPACE/port/port.zip" -o"$GITHUB_WORKSPACE/port" payload.bin >/dev/null
-End_Time 解压移植包
-echo -e "${Red}- 查找 payload.bin"
-PORT_PAYLOAD=$(find "$GITHUB_WORKSPACE/port" -type f -name payload.bin | head -n 1)
-if [ -z "$PORT_PAYLOAD" ]; then
-  echo -e "${Red}- 未找到 payload.bin，退出"
-  exit 1
-fi
-echo -e "${Yellow}- payload: $PORT_PAYLOAD"
+cd "$GITHUB_WORKSPACE"/images
 echo -e "${Red}- 开始解移植包 Payload"
-Start_Time
-$payload_extract \
-  -s \
-  -o "$GITHUB_WORKSPACE/images/" \
-  -i "$PORT_PAYLOAD" \
-  -X mi_ext,product,system,system_ext,odm \
-  -T0
-End_Time 解移植包Payload
-rm -rf "$GITHUB_WORKSPACE/port"
+$payload_extract -s -o "$GITHUB_WORKSPACE"/images/ -i "${URL}" -X mi_ext,product,system,system_ext,odm -T0
 echo -e "${Red}- 开始分解移植包 Images"
 for i in mi_ext product system system_ext odm; do
   echo -e "${Yellow}- 正在分解移植包: $i"
