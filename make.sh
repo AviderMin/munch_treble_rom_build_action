@@ -103,9 +103,35 @@ for i in system_ext odm vendor; do
 done
 sudo mkdir -p "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
 sudo cp -rf "$GITHUB_WORKSPACE"/Extra_dir/* "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
-cd "$GITHUB_WORKSPACE"/images
+echo -e "${Yellow}- 开始下载移植包"
+Start_Time
+mkdir -p "$GITHUB_WORKSPACE/port"
+aria2c -x16 -s16 -j$(nproc) -U "Mozilla/5.0" \
+  -d "$GITHUB_WORKSPACE/port" \
+  -o port.zip \
+  "${URL}"
+End_Time 下载移植包
+echo -e "${Yellow}- 解压移植包"
+Start_Time
+$a7z x "$GITHUB_WORKSPACE/port/port.zip" -o"$GITHUB_WORKSPACE/port" payload.bin >/dev/null
+End_Time 解压移植包
+echo -e "${Red}- 查找 payload.bin"
+PORT_PAYLOAD=$(find "$GITHUB_WORKSPACE/port" -type f -name payload.bin | head -n 1)
+if [ -z "$PORT_PAYLOAD" ]; then
+  echo -e "${Red}- 未找到 payload.bin，退出"
+  exit 1
+fi
+echo -e "${Yellow}- payload: $PORT_PAYLOAD"
 echo -e "${Red}- 开始解移植包 Payload"
-$payload_extract -s -o "$GITHUB_WORKSPACE"/images/ -i "${URL}" -X mi_ext,product,system,system_ext,odm -T0
+Start_Time
+$payload_extract \
+  -s \
+  -o "$GITHUB_WORKSPACE/images/" \
+  -i "$PORT_PAYLOAD" \
+  -X mi_ext,product,system,system_ext,odm \
+  -T0
+End_Time 解移植包Payload
+rm -rf "$GITHUB_WORKSPACE/port"
 echo -e "${Red}- 开始分解移植包 Images"
 for i in mi_ext product system system_ext odm; do
   echo -e "${Yellow}- 正在分解移植包: $i"
@@ -374,10 +400,8 @@ fi
 echo -e "${Red}- 修复分辨率异常 (440)"
 sudo find "$GITHUB_WORKSPACE"/images/ -type f -name 'build.prop' | while read -r file; do
   echo -e "${Yellow}- 处理文件: $file"
-  # 删除 sec_density
-  sed -i '/ro\.sf\.lcd_sec_density/d' "$file"
-  # 如果存在 lcd_density 就替换，不存在就追加
   if grep -q '^ro\.sf\.lcd_density=' "$file"; then
+    # 存在 → 替换
     sed -i 's/^ro\.sf\.lcd_density=.*/ro.sf.lcd_density=440/' "$file"
 done
 # 精简无用配置
