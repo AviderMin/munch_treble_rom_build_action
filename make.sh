@@ -226,21 +226,38 @@ echo -e "${Red}- 替换 dtbo.img"
 [ -f "$GITHUB_WORKSPACE/kernel/dtbo.img" ] && cp -f "$GITHUB_WORKSPACE/kernel/dtbo.img" "$GITHUB_WORKSPACE/${device}/firmware-update/dtbo.img"
 
 # 内置 Recovery
-echo -e "${Red}- 内置 TWRP"
-if [ -f "$GITHUB_WORKSPACE"/tools/ramdisk.cpio ]; then
-  mkdir -p "$GITHUB_WORKSPACE"/rec_boot
-  cp -f "$GITHUB_WORKSPACE/${device}/firmware-update/boot.img" "$GITHUB_WORKSPACE"/rec_boot/
-  cp -f "$magiskboot" "$GITHUB_WORKSPACE"/rec_boot/
-  chmod +x "$GITHUB_WORKSPACE"/rec_boot/magiskboot
-  cd "$GITHUB_WORKSPACE"/rec_boot || exit
-  ./magiskboot unpack boot.img
-  cp -f "$GITHUB_WORKSPACE"/tools/ramdisk.cpio ./ramdisk.cpio
-  ./magiskboot repack boot.img boot_twrp.img
-  cd "$GITHUB_WORKSPACE" || exit
-  cp -f "$GITHUB_WORKSPACE"/rec_boot/boot_twrp.img "$GITHUB_WORKSPACE/${device}/firmware-update/boot.img"
-  rm -rf "$GITHUB_WORKSPACE"/rec_boot
+echo -e "${Red}- 内置 Recovery"
+if [ -f "$GITHUB_WORKSPACE"/"${device}"_files/"${device}"_recovery.zip ]; then
+  echo -e "${Yellow}- 解压 Recovery 镜像"
+  mkdir -p "$GITHUB_WORKSPACE"/recovery_temp
+  unzip -o "$GITHUB_WORKSPACE"/"${device}"_files/"${device}"_recovery.zip -d "$GITHUB_WORKSPACE"/recovery_temp
+  
+  if [ -f "$GITHUB_WORKSPACE"/recovery_temp/recovery.img ]; then
+    echo -e "${Yellow}- 解包 Recovery 镜像获取 ramdisk.cpio"
+    cd "$GITHUB_WORKSPACE"/recovery_temp
+    "$magiskboot" unpack recovery.img
+    cp -f "$GITHUB_WORKSPACE"/recovery_temp/ramdisk.cpio "$GITHUB_WORKSPACE"/tools/ramdisk.cpio
+    cd "$GITHUB_WORKSPACE"
+    
+    mkdir -p "$GITHUB_WORKSPACE"/rec_boot
+    cp -f "$GITHUB_WORKSPACE/${device}/firmware-update/boot.img" "$GITHUB_WORKSPACE"/rec_boot/
+    cp -f "$magiskboot" "$GITHUB_WORKSPACE"/rec_boot/
+    chmod +x "$GITHUB_WORKSPACE"/rec_boot/magiskboot
+    cd "$GITHUB_WORKSPACE"/rec_boot || exit
+    ./magiskboot unpack boot.img
+    cp -f "$GITHUB_WORKSPACE"/tools/ramdisk.cpio ./ramdisk.cpio
+    ./magiskboot repack boot.img boot_rec.img
+    cd "$GITHUB_WORKSPACE" || exit
+    cp -f "$GITHUB_WORKSPACE"/rec_boot/boot_rec.img "$GITHUB_WORKSPACE/${device}/firmware-update/boot.img"
+    rm -rf "$GITHUB_WORKSPACE"/rec_boot
+    rm -rf "$GITHUB_WORKSPACE"/recovery_temp
+    rm -f "$GITHUB_WORKSPACE"/tools/ramdisk.cpio
+  else
+    echo -e "${Yellow}- 警告: recovery.img 不存在，跳过内置 Recovery"
+    rm -rf "$GITHUB_WORKSPACE"/recovery_temp
+  fi
 else
-  echo -e "${Yellow}- 警告: ramdisk.cpio 不存在，跳过内置 TWRP"
+  echo -e "${Yellow}- 警告: ${device}_recovery.zip 不存在，跳过内置 Recovery"
 fi
 
 # 清理临时目录
