@@ -498,8 +498,8 @@ for kv in "${system_keyvalues[@]}"; do
   fi
 done
 
-# 修复卡顿掉帧
-echo -e "${Red}- 修复卡顿掉帧"
+# 添加 Props
+echo -e "${Red}- 添加 Props"
 product_build_prop=$(sudo find "$GITHUB_WORKSPACE"/images/product/ -type f -name "build.prop")
 keyvalues=(
   "ro.vendor.audio.dolby.spatial.profile=dynamic"
@@ -538,6 +538,8 @@ keyvalues=(
   "ro.surface_flinger.set_touch_timer_ms=2147483647"
   "ro.surface_flinger.set_display_power_timer_ms=2147483647"
   "persist.miui.extm.dm_opt.enable=true"
+  "debug.game.video.support=true"
+  "debug.game.video.speed=true"
 )
 for kv in "${keyvalues[@]}"; do
   key="${kv%%=*}"
