@@ -742,7 +742,7 @@ echo -e "${Red}- 开始生成刷机包"
 echo -e "${Red}- 开始压缩 super.zst"
 Start_Time
 sudo find "$GITHUB_WORKSPACE"/images/ -exec touch -t 200901010000.00 {} \;
-zstd -12 -f "$GITHUB_WORKSPACE"/images/super.img -o "$GITHUB_WORKSPACE"/images/super.zst --rm
+zstd -3 -f "$GITHUB_WORKSPACE"/images/super.img -o "$GITHUB_WORKSPACE"/images/super.zst --rm
 End_Time "压缩 super.zst"
 
 echo -e "${Red}- 生成刷机包"
