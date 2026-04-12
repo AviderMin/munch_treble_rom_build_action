@@ -289,8 +289,8 @@ sudo sed -i \
 sudo find "$GITHUB_WORKSPACE"/images/ -path "$GITHUB_WORKSPACE"/images/mi_ext -prune -o -type f -name 'build.prop' -print | while read -r port_build_prop; do
   sudo sed -i 's/build.date=[^*]*/build.date='"${build_time}"'/' "${port_build_prop}"
   sudo sed -i 's/build.date.utc=[^*]*/build.date.utc='"${build_utc}"'/' "${port_build_prop}"
-  sudo sed -i 's/'"${port_os_version}'/'"${vendor_os_version}'/g' "${port_build_prop}"
-  sudo sed -i 's/'"${port_base_line}'/'"${origin_base_line}'/g' "${port_build_prop}"
+  sudo sed -i 's/'"${port_os_version}"'/'"${vendor_os_version}"'/g' "${port_build_prop}"
+  sudo sed -i 's/'"${port_base_line}"'/'"${origin_base_line}"'/g' "${port_build_prop}"
   sudo sed -i 's/ro.product.product.name=[^*]*/ro.product.product.name='"${device}"'/' "${port_build_prop}"
 done
 
@@ -498,8 +498,8 @@ for kv in "${system_keyvalues[@]}"; do
   fi
 done
 
-# 修复卡顿掉帧
-echo -e "${Red}- 修复卡顿掉帧"
+# 添加 Props
+echo -e "${Red}- 添加 Props"
 product_build_prop=$(sudo find "$GITHUB_WORKSPACE"/images/product/ -type f -name "build.prop")
 keyvalues=(
   "ro.vendor.audio.dolby.spatial.profile=dynamic"
@@ -538,6 +538,8 @@ keyvalues=(
   "ro.surface_flinger.set_touch_timer_ms=2147483647"
   "ro.surface_flinger.set_display_power_timer_ms=2147483647"
   "persist.miui.extm.dm_opt.enable=true"
+  "debug.game.video.support=true"
+  "debug.game.video.speed=true"
 )
 for kv in "${keyvalues[@]}"; do
   key="${kv%%=*}"
