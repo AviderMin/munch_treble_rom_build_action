@@ -289,8 +289,8 @@ sudo sed -i \
 sudo find "$GITHUB_WORKSPACE"/images/ -path "$GITHUB_WORKSPACE"/images/mi_ext -prune -o -type f -name 'build.prop' -print | while read -r port_build_prop; do
   sudo sed -i 's/build.date=[^*]*/build.date='"${build_time}"'/' "${port_build_prop}"
   sudo sed -i 's/build.date.utc=[^*]*/build.date.utc='"${build_utc}"'/' "${port_build_prop}"
-  sudo sed -i 's/'"${port_os_version}'/'"${vendor_os_version}'/g' "${port_build_prop}"
-  sudo sed -i 's/'"${port_base_line}'/'"${origin_base_line}'/g' "${port_build_prop}"
+  sudo sed -i 's/'"${port_os_version}"'/'"${vendor_os_version}"'/g' "${port_build_prop}"
+  sudo sed -i 's/'"${port_base_line}"'/'"${origin_base_line}"'/g' "${port_build_prop}"
   sudo sed -i 's/ro.product.product.name=[^*]*/ro.product.product.name='"${device}"'/' "${port_build_prop}"
 done
 
