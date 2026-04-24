@@ -126,41 +126,49 @@ done
 
 ### 写入变量
 echo -e "${Red}- 开始写入变量"
-echo "build_time=$build_time" >>$GITHUB_ENV
+
+echo "build_time=$build_time" >> "$GITHUB_ENV"
 echo -e "${Blue}- 构建日期: $build_time"
 
-odm_build_prop="$GITHUB_WORKSPACE"/images/odm/etc/build.prop
-model=$(grep "ro.product.odm.marketname=" "$odm_build_prop" | cut -d'=' -f2)
-echo "model=$model" >> $GITHUB_ENV
+odm_build_prop="$GITHUB_WORKSPACE/images/odm/etc/build.prop"
+model=$(grep '^ro.product.odm.marketname=' "$odm_build_prop" | head -n1 | cut -d'=' -f2-)
+
+{
+  echo "model<<EOF"
+  echo "$model"
+  echo "EOF"
+} >> "$GITHUB_ENV"
+
 echo -e "${Blue}- 移植包机型: $model"
 
-echo "port_os_version=$port_os_version" >>$GITHUB_ENV
+echo "port_os_version=$port_os_version" >> "$GITHUB_ENV"
 echo -e "${Blue}- 移植包版本: $port_os_version"
-echo "vendor_os_version=$vendor_os_version" >>$GITHUB_ENV
 
-system_build_prop=$(find "$GITHUB_WORKSPACE"/images/system/system/ -maxdepth 1 -type f -name "build.prop" | head -n 1)
-port_security_patch=$(grep "ro.build.version.security_patch=" "$system_build_prop" | awk -F "=" '{print $2}')
+echo "vendor_os_version=$vendor_os_version" >> "$GITHUB_ENV"
+
+system_build_prop=$(find "$GITHUB_WORKSPACE/images/system/system/" -maxdepth 1 -type f -name "build.prop" | head -n 1)
+
+port_security_patch=$(grep '^ro.build.version.security_patch=' "$system_build_prop" | cut -d'=' -f2-)
 echo -e "${Blue}- 移植包安全补丁版本: $port_security_patch"
-echo "port_security_patch=$port_security_patch" >>$GITHUB_ENV
+echo "port_security_patch=$port_security_patch" >> "$GITHUB_ENV"
 
-vendor_build_prop=$GITHUB_WORKSPACE/${device}/vendor/build.prop
-vendor_security_patch=$(grep "ro.vendor.build.security_patch=" "$vendor_build_prop" | awk -F "=" '{print $2}')
+vendor_build_prop="$GITHUB_WORKSPACE/${device}/vendor/build.prop"
+vendor_security_patch=$(grep '^ro.vendor.build.security_patch=' "$vendor_build_prop" | cut -d'=' -f2-)
 echo -e "${Blue}- 底包安全补丁版本: $vendor_security_patch"
-echo "vendor_security_patch=$vendor_security_patch" >>$GITHUB_ENV
+echo "vendor_security_patch=$vendor_security_patch" >> "$GITHUB_ENV"
 
-port_base_line=$(grep "ro.system.build.id=" "$system_build_prop" | awk -F "=" '{print $2}')
+port_base_line=$(grep '^ro.system.build.id=' "$system_build_prop" | cut -d'=' -f2-)
 echo -e "${Blue}- 移植包基线版本: $port_base_line"
-echo "port_base_line=$port_base_line" >>$GITHUB_ENV
+echo "port_base_line=$port_base_line" >> "$GITHUB_ENV"
 
-system_ext_build_prop=$GITHUB_WORKSPACE/${device}/system_ext/etc/build.prop
-origin_base_line=$(grep "ro.system_ext.build.id=" "$system_ext_build_prop" | awk -F "=" '{print $2}')
+system_ext_build_prop="$GITHUB_WORKSPACE/${device}/system_ext/etc/build.prop"
+origin_base_line=$(grep '^ro.system_ext.build.id=' "$system_ext_build_prop" | cut -d'=' -f2-)
 echo -e "${Blue}- 底包基线版本: $origin_base_line"
-echo "origin_base_line=$origin_base_line" >>$GITHUB_ENV
+echo "origin_base_line=$origin_base_line" >> "$GITHUB_ENV"
 
-vendor_base_line=$(grep "ro.vendor.build.id=" "$vendor_build_prop" | awk -F "=" '{print $2}')
+vendor_base_line=$(grep '^ro.vendor.build.id=' "$vendor_build_prop" | cut -d'=' -f2-)
 echo -e "${Blue}- 底包vendor基线版本: $vendor_base_line"
-echo "vendor_base_line=$vendor_base_line" >>$GITHUB_ENV
-### 写入变量结束
+echo "vendor_base_line=$vendor_base_line" >> "$GITHUB_ENV"
 
 ### 功能修复
 echo -e "${Red}- 开始功能修复"
@@ -279,19 +287,27 @@ echo -e "${Red}- 添加 zram 1:1 白名单"
 sudo rm -rf "$GITHUB_WORKSPACE"/images/system_ext/etc/perfinit_bdsize_zram.conf
 sudo cp -f "$GITHUB_WORKSPACE"/"${device}"_files/perfinit_bdsize_zram.conf "$GITHUB_WORKSPACE"/images/system_ext/etc
 
-# 统一 build.prop
+### 统一 build.prop
 echo -e "${Red}- 统一 build.prop"
-sudo sed -i \
-  -e 's/ro.build.maintainer=[^*]*/ro.build.maintainer=AviderMin/' \
-  -e 's/ro.build.contributors=[^*]*/ro.build.contributors=YuKongA,Kyuofox,lingqiqi5211/' \
-  "$GITHUB_WORKSPACE"/images/system/system/build.prop
 
-sudo find "$GITHUB_WORKSPACE"/images/ -path "$GITHUB_WORKSPACE"/images/mi_ext -prune -o -type f -name 'build.prop' -print | while read -r port_build_prop; do
-  sudo sed -i 's/build.date=[^*]*/build.date='"${build_time}"'/' "${port_build_prop}"
-  sudo sed -i 's/build.date.utc=[^*]*/build.date.utc='"${build_utc}"'/' "${port_build_prop}"
-  sudo sed -i 's/'"${port_os_version}"'/'"${vendor_os_version}"'/g' "${port_build_prop}"
-  sudo sed -i 's/'"${port_base_line}"'/'"${origin_base_line}"'/g' "${port_build_prop}"
-  sudo sed -i 's/ro.product.product.name=[^*]*/ro.product.product.name='"${device}"'/' "${port_build_prop}"
+sudo sed -i \
+  -e "s/^ro\.build\.maintainer=.*/ro.build.maintainer=AviderMin/" \
+  -e "s/^ro\.build\.contributors=.*/ro.build.contributors=YuKongA,Kyuofox,lingqiqi5211/" \
+  "$GITHUB_WORKSPACE/images/system/system/build.prop"
+
+### 批量处理
+sudo find "$GITHUB_WORKSPACE/images/" \
+  -path "$GITHUB_WORKSPACE/images/mi_ext" -prune -o \
+  -type f -name 'build.prop' -print | while read -r port_build_prop; do
+
+  sudo sed -i \
+    -e "s/^build\.date=.*/build.date=${build_time}/" \
+    -e "s/^build\.date\.utc=.*/build.date.utc=${build_utc}/" \
+    -e "s|${port_os_version}|${vendor_os_version}|g" \
+    -e "s|${port_base_line}|${origin_base_line}|g" \
+    -e "s/^ro\.product\.product\.name=.*/ro.product.product.name=${device}/" \
+    "$port_build_prop"
+
 done
 
 # EROFS 特定修改
