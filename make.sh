@@ -293,7 +293,7 @@ echo -e "${Red}- 统一 build.prop"
 sudo sed -i \
   -e "s/^ro\.build\.maintainer=.*/ro.build.maintainer=AviderMin/" \
   -e "s/^ro\.build\.contributors=.*/ro.build.contributors=YuKongA,Kyuofox,lingqiqi5211/" \
-  "$GITHUB_WORKSPACE/images/system/system/build.prop"
+  "$GITHUB_WORKSPACE/images/system/build.prop"
 
 ### 批量处理
 sudo find "$GITHUB_WORKSPACE/images/" \
