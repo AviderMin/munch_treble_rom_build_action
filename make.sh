@@ -480,6 +480,10 @@ sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/CameraTools_beta.zip -d "
 echo -e "${Red}- 替换 Rust 相册"
 sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/Gallery.zip -d "$GITHUB_WORKSPACE"/images/product/data-app/
 
+# 替换 Rust 天气
+echo -e "${Red}- 替换 Rust 天气"
+sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/Weather.zip -d "$GITHUB_WORKSPACE"/images/product/data-app/
+
 # 部分机型指纹支付相关服务存在于 Product，需要清除
 echo -e "${Red}- 清除多余指纹支付服务"
 for files in IFAAService MipayService SoterService TimeService; do
