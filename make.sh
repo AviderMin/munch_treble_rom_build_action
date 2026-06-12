@@ -704,6 +704,10 @@ sudo sed -i "/ro.vendor.nfc.mibeam/d" "$GITHUB_WORKSPACE"/"${device}"/vendor/bui
 sudo sed -i ''"$(sudo sed -n '/ro.vendor.nfc.repair/=' "$GITHUB_WORKSPACE"/"${device}"/vendor/build.prop)"'a ro.vendor.nfc.mitouch=1' "$GITHUB_WORKSPACE"/"${device}"/vendor/build.prop
 sudo find "$GITHUB_WORKSPACE"/"${device}"/vendor/etc/permissions -type f -iname "*beam*.xml" -delete
 
+# 修复 Google 功能
+sudo mkdir -p "$GITHUB_WORKSPACE"/images/product/etc/permissions
+sudo cp -rf "$GITHUB_WORKSPACE"/"${device}"_files/cn.google.services.xml "$GITHUB_WORKSPACE"/images/product/etc/permissions/
+
 # 替换更改文件/删除多余文件
 echo -e "${Red}- 替换更改文件/删除多余文件"
 sudo rm -rf "$GITHUB_WORKSPACE"/images/odm
