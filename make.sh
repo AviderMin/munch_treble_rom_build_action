@@ -484,6 +484,10 @@ sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/Gallery.zip -d "$GITHUB_W
 echo -e "${Red}- 替换 Rust 天气"
 sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/Weather.zip -d "$GITHUB_WORKSPACE"/images/product/data-app/
 
+# 删除 Updater 应用
+echo -e "${Red}- 删除 Updater 应用"
+sudo rm -rf "$GITHUB_WORKSPACE"/images/product/app/Updater
+
 # 部分机型指纹支付相关服务存在于 Product，需要清除
 echo -e "${Red}- 清除多余指纹支付服务"
 for files in IFAAService MipayService SoterService TimeService; do
