@@ -293,7 +293,7 @@ echo -e "${Red}- 统一 build.prop"
 sudo sed -i \
   -e "s/^ro\.build\.maintainer=.*/ro.build.maintainer=AviderMin/" \
   -e "s/^ro\.build\.contributors=.*/ro.build.contributors=YuKongA,Kyuofox,lingqiqi5211/" \
-  "$GITHUB_WORKSPACE/images/system/system/build.prop"
+  "$GITHUB_WORKSPACE/images/system/build.prop"
 
 ### 批量处理
 sudo find "$GITHUB_WORKSPACE/images/" \
@@ -556,6 +556,22 @@ keyvalues=(
   "persist.miui.extm.dm_opt.enable=true"
   "debug.game.video.support=true"
   "debug.game.video.speed=true"
+  "sys.haptic.down=0,2"
+  "sys.haptic.tap.normal=0,2"
+  "sys.haptic.tap.light=0,2"
+  "sys.haptic.flick=0,2"
+  "sys.haptic.flick.light=0,2"
+  "sys.haptic.switch=0,2"
+  "sys.haptic.mesh.heavy=0,2"
+  "sys.haptic.mesh.normal=0,2"
+  "sys.haptic.mesh.light=0,2"
+  "sys.haptic.long.press=0,2"
+  "sys.haptic.popup.normal=0,2"
+  "sys.haptic.popup.light=0,2"
+  "sys.haptic.pickup=0,2"
+  "sys.haptic.scroll.edge=0,2"
+  "sys.haptic.trigger.drawer=0,2"
+  "sys.haptic.hold=0,2"
 )
 for kv in "${keyvalues[@]}"; do
   key="${kv%%=*}"
