@@ -476,6 +476,10 @@ done
 echo -e "${Red}- 替换相机标定"
 sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/CameraTools_beta.zip -d "$GITHUB_WORKSPACE"/images/product/app/
 
+# 添加 KernelSU 管理器
+echo -e "${Red}- 添加 KernelSU 管理器"
+sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/KernelSU.zip -d "$GITHUB_WORKSPACE"/images/product/data-app/
+
 # 替换 Rust 相册
 echo -e "${Red}- 替换 Rust 相册"
 sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/Gallery.zip -d "$GITHUB_WORKSPACE"/images/product/data-app/
