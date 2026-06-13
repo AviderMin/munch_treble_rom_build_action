@@ -101,21 +101,13 @@ rm -rf "$GITHUB_WORKSPACE"/${port_zip_name}
 End_Time 解压移植包
 
 echo -e "${Red}- 开始分解底包 Images"
-echo -e "${Yellow}- 正在分解底包: vendor.img"
-cd "$GITHUB_WORKSPACE"/"${device}"
-sudo $erofs_extract -i "$GITHUB_WORKSPACE"/Extra_dir/vendor.img -x -s
-echo -e "${Yellow}- 开始解压 vendor_libs.zip"
-sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/vendor_libs.zip -d "$GITHUB_WORKSPACE"/Extra_dir/vendor/
-echo -e "${Yellow}- 重新打包 vendor.img"
-cd "$GITHUB_WORKSPACE"/Extra_dir
-sudo $erofs_mkfs vendor.img vendor/
-sudo rm -rf "$GITHUB_WORKSPACE"/Extra_dir/vendor
-for i in system_ext odm; do
+for i in system_ext odm vendor; do
   echo -e "${Yellow}- 正在分解底包: $i.img"
   cd "$GITHUB_WORKSPACE"/"${device}"
   sudo $erofs_extract -i "$GITHUB_WORKSPACE"/Extra_dir/$i.img -x -s
   rm -rf "$GITHUB_WORKSPACE"/Extra_dir/$i.img
 done
+
 sudo mkdir -p "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
 sudo cp -rf "$GITHUB_WORKSPACE"/Extra_dir/* "$GITHUB_WORKSPACE"/"${device}"/firmware-update/
 
