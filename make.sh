@@ -425,11 +425,6 @@ if [ -f "$src" ]; then
   sudo mv -f "$src" "$dst"
 fi
 
-# 修复 Aod 异常
-echo -e "${Red}- 修复 Aod 异常"
-sudo rm -rf "$GITHUB_WORKSPACE"/images/product/priv-app/MIUIAod
-sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/aod.zip -d "$GITHUB_WORKSPACE"/images/product/priv-app/
-
 # 禁用 Dolby AC4 解码
 echo -e "${Red}- 禁用 Dolby AC4 解码"
 sudo rm -rf "$GITHUB_WORKSPACE"/"${device}"/vendor/etc/media_codecs_dolby_audio.xml
@@ -475,10 +470,6 @@ done
 # 替换相机标定
 echo -e "${Red}- 替换相机标定"
 sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/CameraTools_beta.zip -d "$GITHUB_WORKSPACE"/images/product/app/
-
-# 添加 KernelSU 管理器
-echo -e "${Red}- 添加 KernelSU 管理器"
-sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/KernelSU.zip -d "$GITHUB_WORKSPACE"/images/product/data-app/
 
 # 替换 Rust 相册
 echo -e "${Red}- 替换 Rust 相册"
