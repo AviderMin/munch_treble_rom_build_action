@@ -488,6 +488,10 @@ sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/Gallery.zip -d "$GITHUB_W
 echo -e "${Red}- 替换 Rust 天气"
 sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/Weather.zip -d "$GITHUB_WORKSPACE"/images/product/data-app/
 
+# 修复 VoiceTrigger 语音唤醒
+echo -e "${Red}- 修复 VoiceTrigger 语音唤醒"
+sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/VoiceTrigger.zip -d "$GITHUB_WORKSPACE"/images/product/app/
+
 # 删除 Updater 应用
 echo -e "${Red}- 删除 Updater 应用"
 sudo rm -rf "$GITHUB_WORKSPACE"/images/product/app/Updater
