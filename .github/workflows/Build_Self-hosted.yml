@@ -18,9 +18,9 @@ jobs:
       - name: 检出仓库文件
         uses: actions/checkout@main
       - name: 准备所需环境
+        env:
+          TZ: Asia/Shanghai
         run: |
-          sudo apt-get install timedatectl
-          sudo timedatectl set-timezone Asia/Shanghai
           sudo apt-get install python3 aria2 p7zip-full zstd
           sudo pip install google protobuf
       - name: 构建 ROM
