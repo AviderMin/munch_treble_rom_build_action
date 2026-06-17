@@ -1,0 +1,35 @@
+name: build for munch
+on:
+  workflow_dispatch:
+    inputs:
+      URL:
+        description: "移植包下载地址"
+        required: true
+      VENDOR_URL:
+        description: "底包下载地址"
+        required: true
+        default: 'https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS1.0.15.0.ULMCNXM/miui_MUNCH_OS1.0.15.0.ULMCNXM_945b975314_14.0.zip'
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: self-hosted
+    steps:
+      - name: 检出仓库文件
+        uses: actions/checkout@main
+      - name: 准备所需环境
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+          sudo apt-get install python3 aria2 p7zip-full zstd
+          sudo pip install google protobuf
+      - name: 构建 ROM
+        run: |
+          sudo bash "$GITHUB_WORKSPACE"/make.sh "${{ github.event.inputs.URL }}" "${{ github.event.inputs.VENDOR_URL }}" "$GITHUB_ENV" "$GITHUB_WORKSPACE"
+      - name: 处理 ROM
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE"/GithubRelease
+          cd "$GITHUB_WORKSPACE"/GithubRelease
+          sudo split -b 1536M -d "$GITHUB_WORKSPACE"/zip/${{ env.rom_name }} ${{ env.rom_name }}
+          cd "$GITHUB_WORKSPACE"
+          touch file.log
+          echo -e "移植机型: ${{ env.model }}\n\n底包版本: ${{ env.vendor_os_version }}\n底包安全补丁版本: ${{ env.vendor_security_patch }}\n底包基线版本: ${{ env.origin_base_line}}\n底包vendor基线版本: ${{ env.vendor_base_line}}\n\n移植包版本: ${{ env.port_os_version }}\n移植包安全补丁版本: ${{ env.port_security_patch }}\n移植包基线版本: ${{ env.port_base_line }}" > file.log
