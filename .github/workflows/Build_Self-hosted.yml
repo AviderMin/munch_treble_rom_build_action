@@ -21,7 +21,7 @@ jobs:
         env:
           TZ: Asia/Shanghai
         run: |
-          sudo apt-get install python3 aria2 p7zip-full zstd
+          sudo apt-get install -y python3 aria2 p7zip-full zstd
           sudo pip install google protobuf
       - name: 构建 ROM
         run: |
