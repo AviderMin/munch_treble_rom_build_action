@@ -21,8 +21,9 @@ jobs:
         env:
           TZ: Asia/Shanghai
         run: |
-          sudo apt-get install python3 aria2 p7zip-full zstd
-          sudo pip install google protobuf
+          sudo apt-get update
+          sudo apt-get install -y python3 aria2 p7zip-full zstd
+          sudo python3 -m pip install google protobuf --break-system-packages
       - name: 构建 ROM
         run: |
           sudo bash "$GITHUB_WORKSPACE"/make.sh "${{ github.event.inputs.URL }}" "${{ github.event.inputs.VENDOR_URL }}" "$GITHUB_ENV" "$GITHUB_WORKSPACE"
