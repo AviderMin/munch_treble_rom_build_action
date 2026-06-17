@@ -1,4 +1,4 @@
-name: build for munch
+name: Build for munch on Local
 on:
   workflow_dispatch:
     inputs:
