@@ -290,10 +290,7 @@ sudo cp -f "$GITHUB_WORKSPACE"/"${device}"_files/perfinit_bdsize_zram.conf "$GIT
 ### 统一 build.prop
 echo -e "${Red}- 统一 build.prop"
 
-sudo sed -i \
-  -e "s/^ro\.build\.maintainer=.*/ro.build.maintainer=AviderMin/" \
-  -e "s/^ro\.build\.contributors=.*/ro.build.contributors=YuKongA,Kyuofox,lingqiqi5211/" \
-  "$GITHUB_WORKSPACE/images/system/system/build.prop"
+sudo sh -c "echo -e '\nro.build.maintainer=AviderMin\nro.build.contributors=YuKongA,Kyuofox,lingqiqi5211' >> '$GITHUB_WORKSPACE/images/system/system/build.prop'"
 
 ### 批量处理
 sudo find "$GITHUB_WORKSPACE/images/" \
