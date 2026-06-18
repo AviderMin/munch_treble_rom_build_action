@@ -287,11 +287,6 @@ echo -e "${Red}- 添加 zram 1:1 白名单"
 sudo rm -rf "$GITHUB_WORKSPACE"/images/system_ext/etc/perfinit_bdsize_zram.conf
 sudo cp -f "$GITHUB_WORKSPACE"/"${device}"_files/perfinit_bdsize_zram.conf "$GITHUB_WORKSPACE"/images/system_ext/etc
 
-### 统一 build.prop
-echo -e "${Red}- 统一 build.prop"
-
-sudo sh -c "echo -e '\nro.build.maintainer=AviderMin\nro.build.contributors=YuKongA,Kyuofox,lingqiqi5211' >> '$GITHUB_WORKSPACE/images/system/system/build.prop'"
-
 ### 批量处理
 sudo find "$GITHUB_WORKSPACE/images/" \
   -path "$GITHUB_WORKSPACE/images/mi_ext" -prune -o \
@@ -522,6 +517,8 @@ done
 echo -e "${Red}- 添加 Props"
 product_build_prop=$(sudo find "$GITHUB_WORKSPACE"/images/product/ -type f -name "build.prop")
 keyvalues=(
+  "ro.build.maintainer=AviderMin"
+  "ro.build.contributors=YuKongA,Kyuofox,lingqiqi5211"
   "ro.vendor.audio.dolby.spatial.profile=dynamic"
   "ro.vendor.display.touch.idle.enable=true"
   "ro.vendor.display.idle_default_fps=120"
