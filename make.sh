@@ -542,6 +542,7 @@ keyvalues=(
   "dalvik.vm.boot-dex2oat-cpu-set=0,1,2,3,4,5,6,7"
   "dalvik.vm.background-dex2oat-cpu-set=0,1,2,3,4,5,6,7"
   "debug.sf.set_idle_timer_ms=110"
+  "persist.sys.support_ultra_hdr=true"
   "persist.sys.miui_animator_sched.bigcores=4-6"
   "persist.sys.miui_animator_sched.sched_threads=2"
   "persist.sys.miui.sf_cores=4-7"
