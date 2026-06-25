@@ -8,7 +8,7 @@ on:
       VENDOR_URL:
         description: "底包下载地址"
         required: true
-        default: 'https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS1.0.15.0.ULMCNXM/miui_MUNCH_OS1.0.15.0.ULMCNXM_945b975314_14.0.zip'
+        default: "https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS1.0.15.0.ULMCNXM/miui_MUNCH_OS1.0.15.0.ULMCNXM_945b975314_14.0.zip"
 jobs:
   build:
     permissions:
@@ -21,10 +21,10 @@ jobs:
           swap-size-mb: 8192
           root-reserve-mb: 8192
           temp-reserve-mb: 2048
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          remove-codeql: "true"
       - name: 检出仓库文件
         uses: actions/checkout@main
       - name: 准备所需环境
