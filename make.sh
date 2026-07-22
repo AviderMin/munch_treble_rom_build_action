@@ -555,7 +555,6 @@ keyvalues=(
 	"ro.surface_flinger.set_idle_timer_ms=2147483647"
 	"ro.surface_flinger.set_touch_timer_ms=2147483647"
 	"ro.surface_flinger.set_display_power_timer_ms=2147483647"
-	"persist.miui.extm.dm_opt.enable=true"
 	"debug.game.video.support=true"
 	"debug.game.video.speed=true"
 	"sys.haptic.down=0,2"
