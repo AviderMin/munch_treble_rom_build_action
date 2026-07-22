@@ -18,8 +18,6 @@ jobs:
       - name: 检出仓库文件
         uses: actions/checkout@main
       - name: 准备所需环境
-        env:
-          TZ: Asia/Shanghai
         run: |
           sudo apt-get update
           sudo apt-get install -y python3 aria2 p7zip-full zstd
