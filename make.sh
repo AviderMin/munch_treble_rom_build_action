@@ -282,6 +282,10 @@ echo -e "${Red}- 添加 device_features 文件"
 sudo rm -rf "$GITHUB_WORKSPACE"/images/product/etc/device_features/*
 sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/features.zip -d "$GITHUB_WORKSPACE"/images/product/etc/device_features/
 
+# 集成 HyperOS Rust Runtime
+echo -e "${Red}- 集成 HyperOS Rust Runtime"
+sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/HyperOS-RustRuntime.zip -d "$GITHUB_WORKSPACE"/images/
+
 # 添加 zram 1:1 白名单
 echo -e "${Red}- 添加 zram 1:1 白名单"
 sudo rm -rf "$GITHUB_WORKSPACE"/images/system_ext/etc/perfinit_bdsize_zram.conf
