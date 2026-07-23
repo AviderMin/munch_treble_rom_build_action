@@ -288,6 +288,8 @@ sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/HyperOS-RustRuntime.zip -
 echo "/system_ext/bin/hyos_spawner u:object_r:zygote_exec:s0" >>"$GITHUB_WORKSPACE"/images/config/system_file_contexts
 echo "/system_ext/lib64/ u:object_r:system_lib_file:s0" >>"$GITHUB_WORKSPACE"/images/config/system_file_contexts
 echo "/system/lib64/ u:object_r:system_lib_file:s0" >>"$GITHUB_WORKSPACE"/images/config/system_file_contexts
+echo "/product/etc/permissions/hyperos.rustruntime_v3_v4_v5.xml u:object_r:product_file:s0" >>"$GITHUB_WORKSPACE"/images/config/system_file_contexts
+echo "/system_ext/framework/hyperos.rustruntime.jar u:object_r:system_framework_file:s0" >>"$GITHUB_WORKSPACE"/images/config/system_file_contexts
 
 # 添加 zram 1:1 白名单
 echo -e "${Red}- 添加 zram 1:1 白名单"
